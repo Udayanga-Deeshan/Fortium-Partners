@@ -24,6 +24,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean create(Employee employee) {
         if (employee != null) {
+            if (employeeRepository.existsByEmail(employee.getEmail())) {
+
+                return false;
+            }
             EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
             entity.setCreatedAt(LocalDateTime.now());
             entity.setUpdatedAt(LocalDateTime.now());
@@ -38,6 +42,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee != null && employee.getId() != null) {
             Optional<EmployeeEntity> existing = employeeRepository.findById(employee.getId());
             if (existing.isPresent()) {
+
+                Optional<EmployeeEntity> emailOwner = employeeRepository
+                        .findByEmail(employee.getEmail());
+
+                if (emailOwner.isPresent() && !emailOwner.get().getId().equals(employee.getId())) {
+
+                    return false;
+                }
+
                 EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
                 entity.setCreatedAt(existing.get().getCreatedAt());
                 entity.setUpdatedAt(LocalDateTime.now());
@@ -47,6 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return false;
     }
+
 
 
     @Override
@@ -61,7 +75,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(id!=null){
             return mapper.map(employeeRepository.findById(id),Employee.class);
         }
-
         return null;
     }
 
@@ -69,7 +82,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean delete(Long id) {
         if (id != null) {
             employeeRepository.deleteById(id);
-
         }
         return false;
     }
