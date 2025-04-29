@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,21 +19,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final ModelMapper mapper;
     private final EmployeeRepository employeeRepository;
+
     @Override
     public boolean create(Employee employee) {
-        if(employee!=null){
-            employeeRepository.save(mapper.map(employee, EmployeeEntity.class));
+        if (employee != null) {
+            EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
+            entity.setCreatedAt(LocalDate.now());
+            entity.setUpdatedAt(LocalDate.now());
+            employeeRepository.save(entity);
+            return true;
         }
-        return  false;
+        return false;
     }
 
     @Override
     public boolean update(Employee employee) {
-        if(employee!=null){
-            employeeRepository.save(mapper.map(employee, EmployeeEntity.class));
+        if (employee != null && employee.getId() != null) {
+            Optional<EmployeeEntity> existing = employeeRepository.findById(employee.getId());
+            if (existing.isPresent()) {
+                EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
+                entity.setCreatedAt(existing.get().getCreatedAt());
+                entity.setUpdatedAt(LocalDate.now());
+                employeeRepository.save(entity);
+                return true;
+            }
         }
-        return  false;
+        return false;
     }
+
 
     @Override
     public List<Employee> getAll() {
