@@ -1,5 +1,6 @@
 package edu.icet.exam.entity;
 
+import edu.icet.exam.util.DepartmentType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +23,8 @@ public class EmployeeEntity {
     private String name;
 
     private String email;
+
+    private DepartmentType department;
 
     private LocalDate createdAt;
 

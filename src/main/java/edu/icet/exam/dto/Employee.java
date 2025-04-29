@@ -1,5 +1,6 @@
 package edu.icet.exam.dto;
 
+import edu.icet.exam.util.DepartmentType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,8 @@ public class Employee {
     private String name;
 
     private String email;
+
+    private DepartmentType department;
 
     private LocalDate createdAt;
 
