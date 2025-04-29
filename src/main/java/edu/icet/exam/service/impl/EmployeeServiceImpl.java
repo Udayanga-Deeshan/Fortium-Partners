@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,8 +25,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean create(Employee employee) {
         if (employee != null) {
             EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
-            entity.setCreatedAt(LocalDate.now());
-            entity.setUpdatedAt(LocalDate.now());
+            entity.setCreatedAt(LocalDateTime.now());
+            entity.setUpdatedAt(LocalDateTime.now());
             employeeRepository.save(entity);
             return true;
         }
@@ -39,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             if (existing.isPresent()) {
                 EmployeeEntity entity = mapper.map(employee, EmployeeEntity.class);
                 entity.setCreatedAt(existing.get().getCreatedAt());
-                entity.setUpdatedAt(LocalDate.now());
+                entity.setUpdatedAt(LocalDateTime.now());
                 employeeRepository.save(entity);
                 return true;
             }
